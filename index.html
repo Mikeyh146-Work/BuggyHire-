@@ -3,75 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buggy Sales Calculation</title>
+    <title>Buggy Calculators</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            display: flex;
+            justify-content: space-around;
         }
-        .container {
-            max-width: 400px;
-            margin: auto;
-            padding: 20px;
+        .calculator {
             border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            width: 45%;
         }
-        .input-box {
+        .calculator h2 {
+            text-align: center;
+        }
+        .input-group {
             margin-bottom: 15px;
         }
-        .input-box label {
+        .input-group label {
             display: block;
             margin-bottom: 5px;
         }
-        .input-box input {
+        .input-group input {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
         }
         .result {
-            margin-top: 15px;
-            font-size: 1.2em;
+            margin-top: 20px;
             font-weight: bold;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Buggy Sales Calculation</h2>
-        <div class="input-box">
-            <label>Total Buggies: 173</label>
+
+    <!-- First Calculator -->
+    <div class="calculator">
+        <h2>Buggy Availability Calculator</h2>
+        <div class="input-group">
+            <label>Total Buggies</label>
+            <input type="number" id="totalBuggies" value="173" readonly>
         </div>
-        <div class="input-box">
-            <label for="soldMWWE">Total Sold (MW/WE):</label>
-            <input type="number" id="soldMWWE" oninput="calculate()">
+        <div class="input-group">
+            <label>Total Sold (MW/WE)</label>
+            <input type="number" id="mwweSold" value="0">
         </div>
-        <div class="input-box">
-            <label for="soldWeeks">Total Sold (Weeks):</label>
-            <input type="number" id="soldWeeks" oninput="calculate()">
+        <div class="input-group">
+            <label>Total Sold (Weeks)</label>
+            <input type="number" id="weeksSold" value="0">
         </div>
-        <div class="input-box">
-            <label for="offline">Offline:</label>
-            <input type="number" id="offline" oninput="calculate()">
+        <div class="input-group">
+            <label>Offline</label>
+            <input type="number" id="offline" value="0">
         </div>
-        <div class="input-box">
-            <label>Contingency Buggies: 3</label>
+        <div class="input-group">
+            <label>Contingency Buggies</label>
+            <input type="number" id="contingency" value="3" readonly>
         </div>
-        <div class="result" id="result">Total Left to Sell: 0</div>
+        <div class="result">
+            Total Left to Sell: <span id="leftToSell">0</span>
+        </div>
+    </div>
+
+    <!-- Second Calculator -->
+    <div class="calculator">
+        <h2>Buggy Collection Calculator</h2>
+        <div class="input-group">
+            <label>In Compound</label>
+            <input type="number" id="inCompound" value="0">
+        </div>
+        <div class="input-group">
+            <label>Left to Collect</label>
+            <input type="number" id="leftToCollect" value="0">
+        </div>
+        <div class="input-group">
+            <label>Contingency Buggies</label>
+            <input type="number" id="contingencyCollect" value="3" readonly>
+        </div>
+        <div class="result">
+            Total Left After Collection: <span id="leftAfterCollection">0</span>
+        </div>
     </div>
 
     <script>
-        function calculate() {
-            const totalBuggies = 173;
-            const contingencyBuggies = 3;
+        // First Calculator Logic
+        function updateFirstCalculator() {
+            const totalBuggies = parseInt(document.getElementById('totalBuggies').value);
+            const mwweSold = parseInt(document.getElementById('mwweSold').value);
+            const weeksSold = parseInt(document.getElementById('weeksSold').value);
+            const offline = parseInt(document.getElementById('offline').value);
+            const contingency = parseInt(document.getElementById('contingency').value);
 
-            const soldMWWE = parseFloat(document.getElementById('soldMWWE').value) || 0;
-            const soldWeeks = parseFloat(document.getElementById('soldWeeks').value) || 0;
-            const offline = parseFloat(document.getElementById('offline').value) || 0;
-
-            const totalLeftToSell = totalBuggies - (soldMWWE + soldWeeks + offline + contingencyBuggies);
-            document.getElementById('result').textContent = `Total Left to Sell: ${totalLeftToSell}`;
+            const leftToSell = totalBuggies - (mwweSold + weeksSold + offline + contingency);
+            document.getElementById('leftToSell').textContent = leftToSell;
         }
+
+        document.getElementById('mwweSold').addEventListener('input', updateFirstCalculator);
+        document.getElementById('weeksSold').addEventListener('input', updateFirstCalculator);
+        document.getElementById('offline').addEventListener('input', updateFirstCalculator);
+
+        // Second Calculator Logic
+        function updateSecondCalculator() {
+            const inCompound = parseInt(document.getElementById('inCompound').value);
+            const leftToCollect = parseInt(document.getElementById('leftToCollect').value);
+            const contingencyCollect = parseInt(document.getElementById('contingencyCollect').value);
+
+            const leftAfterCollection = leftToCollect - inCompound - contingencyCollect;
+            document.getElementById('leftAfterCollection').textContent = leftAfterCollection;
+        }
+
+        document.getElementById('inCompound').addEventListener('input', updateSecondCalculator);
+        document.getElementById('leftToCollect').addEventListener('input', updateSecondCalculator);
     </script>
+
 </body>
 </html>
